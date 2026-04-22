@@ -605,29 +605,55 @@ html, body {
 @media screen and (max-width: 768px) {
   :root { --sidebar-w: 0px; }
   .mobile-only-btn { display: inline-flex; }
+  
+  .top-bar { 
+    padding: 0 8px; 
+    overflow-x: auto; /* Enable horizontal scroll for top-bar features */
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+  }
+  .top-bar::-webkit-scrollbar { display: none; } /* Hide scrollbar but keep functionality */
+
+  .top-bar-right { 
+    gap: 10px; 
+    padding-right: 20px;
+    flex-shrink: 0;
+  }
+  /* Show all features in top-bar with horizontal scroll */
+  .top-bar-right .bar-label, .top-bar-right .bar-select, .top-bar-right .btn-purple, .top-bar-right .btn-teal { 
+    display: inline-flex !important; 
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+
   .sidebar {
     position: fixed;
-    left: -280px;
+    left: -300px;
     top: var(--topbar-h);
     bottom: var(--statusbar-h);
     z-index: 1000;
     transition: left 0.3s ease;
-    width: 280px !important;
+    width: 300px !important;
     background: var(--surface);
     box-shadow: 10px 0 30px rgba(0,0,0,0.8);
-    display: flex !important; /* Force display when toggled */
+    display: flex !important;
+    max-width: 85vw;
   }
   .sidebar.open { left: 0; }
+  
+  /* Sidebar scrollable sections for mobile */
+  .sidebar-section {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .main-layout { top: var(--topbar-h); left: 0; right: 0; bottom: var(--statusbar-h); }
   
-  /* Ensure diagram is visible on mobile */
-  .center-content { width: 100vw; height: calc(100vh - var(--topbar-h) - var(--statusbar-h)); }
+  /* Ensure diagram center content is full width */
+  .center-content { width: 100vw; height: calc(100vh - var(--topbar-h) - var(--statusbar-h)); flex-shrink: 0; }
   
-  /* Responsive Header for Mobile */
-  .top-bar-right .bar-label, .top-bar-right .bar-select { display: none; }
-  .top-bar-right { gap: 4px; }
-  .app-title { font-size: 13px; }
-  .logo-hex { font-size: 18px; }
+  .app-title { font-size: 13px; white-space: nowrap; }
+  .logo-hex { font-size: 18px; flex-shrink: 0; }
 }
 
 /* Animations */
