@@ -593,85 +593,10 @@ html, body {
 .rotate-icon { font-size: 50px; animation: rotateAnim 2s infinite linear; }
 @keyframes rotateAnim { 0% { transform: rotate(0deg); } 50% { transform: rotate(90deg); } 100% { transform: rotate(0deg); } }
 
-/* Show enforcer only in portrait mode on small screens */
-@media screen and (orientation: portrait) and (max-width: 950px) {
+/* Portrait block for mobile devices based on screen ratio since viewport is fixed */
+@media screen and (max-aspect-ratio: 1/1) {
   .landscape-enforcer { display: flex; }
   body { overflow: hidden; }
-}
-
-/* === MOBILE LAYOUT FIXES === */
-.mobile-only-btn { display: none; }
-
-@media screen and (max-width: 768px) {
-  :root { --sidebar-w: 0px; }
-  .mobile-only-btn { display: inline-flex !important; }
-  
-  .top-bar { 
-    padding: 0 8px !important; 
-    overflow-x: auto !important; 
-    overflow-y: hidden !important;
-    justify-content: flex-start !important;
-    display: flex !important;
-    -webkit-overflow-scrolling: touch !important;
-  }
-  .top-bar::-webkit-scrollbar { height: 2px; }
-  .top-bar::-webkit-scrollbar-thumb { background: var(--accent); }
-
-  .top-bar-left { flex-shrink: 0; margin-right: 15px; }
-  .top-bar-right { 
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    gap: 12px !important; 
-    padding-right: 30px !important;
-    flex-shrink: 0 !important;
-  }
-  
-  /* Force all buttons and selects to show in the scrollable top-bar */
-  .top-bar-right .bar-label, 
-  .top-bar-right .bar-select, 
-  .top-bar-right .btn,
-  .top-bar-right .dropdown-wrap { 
-    display: inline-flex !important; 
-    flex-shrink: 0 !important;
-  }
-
-  .sidebar {
-    position: fixed !important;
-    left: -320px;
-    top: var(--topbar-h);
-    bottom: var(--statusbar-h);
-    z-index: 2000 !important;
-    transition: left 0.3s ease;
-    width: 320px !important;
-    background: var(--surface) !important;
-    box-shadow: 10px 0 30px rgba(0,0,0,0.9);
-    display: flex !important;
-    flex-direction: column !important;
-    max-width: 90vw;
-  }
-  .sidebar.open { left: 0; }
-  
-  /* Ensure sidebar content is scrollable and visible */
-  .sidebar-section {
-    flex-shrink: 0 !important;
-    overflow-y: visible !important;
-  }
-  .classes-section {
-    flex: 1 !important;
-    min-height: 200px !important;
-    overflow-y: auto !important;
-  }
-  .tips-box {
-    max-height: none !important;
-    overflow-y: visible !important;
-  }
-
-  .main-layout { top: var(--topbar-h); left: 0; right: 0; bottom: var(--statusbar-h); }
-  .center-content { width: 100vw; height: calc(100vh - var(--topbar-h) - var(--statusbar-h)); flex-shrink: 0; }
-  
-  .app-title { font-size: 13px; white-space: nowrap; }
-  .logo-hex { font-size: 18px; flex-shrink: 0; }
 }
 
 /* Animations */
