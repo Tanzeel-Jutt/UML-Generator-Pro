@@ -600,25 +600,34 @@ html, body {
 }
 
 /* === MOBILE LAYOUT FIXES === */
+.mobile-only-btn { display: none; }
+
 @media screen and (max-width: 768px) {
   :root { --sidebar-w: 0px; }
+  .mobile-only-btn { display: inline-flex; }
   .sidebar {
-    position: absolute;
-    left: -260px;
+    position: fixed;
+    left: -280px;
     top: var(--topbar-h);
     bottom: var(--statusbar-h);
-    z-index: 150;
-    transition: left 0.3s;
-    width: 260px !important;
+    z-index: 1000;
+    transition: left 0.3s ease;
+    width: 280px !important;
     background: var(--surface);
-    box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+    box-shadow: 10px 0 30px rgba(0,0,0,0.8);
+    display: flex !important; /* Force display when toggled */
   }
   .sidebar.open { left: 0; }
   .main-layout { top: var(--topbar-h); left: 0; right: 0; bottom: var(--statusbar-h); }
-  .top-bar-right .btn-purple, .top-bar-right .btn-teal, .top-bar-right .bar-label, .top-bar-right .bar-select { display: none; }
-  .top-bar { padding: 0 8px; justify-content: flex-start; }
+  
+  /* Ensure diagram is visible on mobile */
+  .center-content { width: 100vw; height: calc(100vh - var(--topbar-h) - var(--statusbar-h)); }
+  
+  /* Responsive Header for Mobile */
+  .top-bar-right .bar-label, .top-bar-right .bar-select { display: none; }
+  .top-bar-right { gap: 4px; }
+  .app-title { font-size: 13px; }
   .logo-hex { font-size: 18px; }
-  .app-title { font-size: 14px; }
 }
 
 /* Animations */

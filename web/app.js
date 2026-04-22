@@ -992,6 +992,21 @@ document.addEventListener('DOMContentLoaded', () => {
        });
    }
 
-   // Run Initial Setup
-   updateUIForLanguage();
+    // Mobile Sidebar Toggle
+    const mobileToggle = document.getElementById('mobile-menu-toggle');
+    const sidebar = document.querySelector('.sidebar');
+    if (mobileToggle && sidebar) {
+        mobileToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            mobileToggle.textContent = sidebar.classList.contains('open') ? '✕ Close' : '☰ Menu';
+        });
+        
+        // Close sidebar when clicking a class or generating on mobile
+        els.genBtn.addEventListener('click', () => {
+            if(window.innerWidth <= 768) sidebar.classList.remove('open');
+        });
+    }
+
+    // Run Initial Setup
+    updateUIForLanguage();
 });
