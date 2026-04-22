@@ -73,40 +73,43 @@
 
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
+    <!-- Top Fixed: Code Input -->
     <div class="sidebar-section">
       <div class="sidebar-title-row">
         <span class="sidebar-title">📝 Code Files</span>
         <button class="mini-btn green" id="add-class-btn" title="Add Class">+ Class</button>
         <button class="mini-btn red" id="remove-class-btn" title="Remove Class">− Remove</button>
       </div>
-      <!-- Code Tabs -->
       <div class="code-tabs-header" id="code-tabs-header"></div>
       <div class="code-tabs-body" id="code-tabs-body"></div>
     </div>
 
     <div class="sidebar-sep"></div>
 
-    <div class="sidebar-section classes-section">
-      <div class="sidebar-title">📦 Classes Found</div>
-      <div class="class-list" id="class-list"></div>
-    </div>
+    <!-- Scrollable Bottom Sections -->
+    <div style="flex: 1; overflow-y: auto; display: flex; flex-direction: column;">
+      <div class="sidebar-section">
+        <div class="sidebar-title">📦 Classes Found</div>
+        <div class="class-list" id="class-list" style="max-height: 250px;"></div>
+      </div>
 
-    <div id="show-full-box" style="display:none" class="sidebar-section">
-      <button class="sidebar-full-btn" id="show-full-btn">🔄 Show Full Diagram</button>
-    </div>
+      <div id="show-full-box" style="display:none" class="sidebar-section">
+        <button class="sidebar-full-btn" id="show-full-btn">🔄 Show Full Diagram</button>
+      </div>
 
-    <div class="sidebar-sep"></div>
+      <div class="sidebar-sep"></div>
 
-    <div class="sidebar-section">
-      <div class="sidebar-title" style="color:#94a3b8;font-size:11px;">💡 Tips</div>
-      <div class="tips-box">
-        <div class="tip">• Add multiple class tabs above</div>
-        <div class="tip">• SQL generates ER + EERD + Mapping</div>
-        <div class="tip">• Click class boxes for details</div>
-        <div class="tip">• >10 classes = overview mode</div>
-        <div class="tip">• Scroll/pinch to zoom diagrams</div>
-        <div class="tip">• Legend: Yellow oval = PK, Red oval = FK</div>
-        <div class="tip">• Legend: Blue box = Entity, Orange = Weak</div>
+      <div class="sidebar-section">
+        <div class="sidebar-title" style="color:#94a3b8;font-size:11px;">💡 Tips</div>
+        <div class="tips-box">
+          <div class="tip">• Add multiple class tabs above</div>
+          <div class="tip">• SQL generates ER + EERD + Mapping</div>
+          <div class="tip">• Click class boxes for details</div>
+          <div class="tip">• >10 classes = overview mode</div>
+          <div class="tip">• Scroll/pinch to zoom diagrams</div>
+          <div class="tip">• Legend: Yellow oval = PK, Red oval = FK</div>
+          <div class="tip">• Legend: Blue box = Entity, Orange = Weak</div>
+        </div>
       </div>
     </div>
   </aside>
