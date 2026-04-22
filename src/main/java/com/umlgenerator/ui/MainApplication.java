@@ -246,7 +246,7 @@ public class MainApplication extends Application {
         Label tip1 = new Label("• Add multiple file tabs above");
         Label tip2 = new Label("• SQL generates ER + EERD + Mapping");
         Label tip3 = new Label("• Click class boxes for details");
-        Label tip4 = new Label("• >20 classes = overview mode");
+        Label tip4 = new Label("• >10 classes = overview mode");
         Label tip5 = new Label("• Ctrl+Scroll to zoom diagrams");
         Label tip6 = new Label("• Legend: Yellow oval = PK, Red oval = FK");
         Label tip7 = new Label("• Legend: Blue box = Entity, Orange = Weak");
