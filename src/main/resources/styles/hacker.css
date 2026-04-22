@@ -1,0 +1,77 @@
+/* Hacker Matrix Theme */
+.root {
+    -fx-font-family: 'Consolas', 'Courier New', monospace;
+    -fx-font-size: 12px;
+    -fx-background-color: #000000;
+    -fx-text-fill: #00ff00;
+}
+
+.root-layout {
+    -fx-background-color: #000000;
+}
+
+.top-bar {
+    -fx-background-color: #050505;
+    -fx-border-color: transparent transparent #00ff00 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.sidebar {
+    -fx-background-color: #020202;
+    -fx-border-color: transparent #00ff00 transparent transparent;
+    -fx-border-width: 0 1 0 0;
+}
+
+.code-input {
+    -fx-control-inner-background: #000000;
+    -fx-text-fill: #00ff00;
+    -fx-border-color: #008800;
+    -fx-prompt-text-fill: #005500;
+}
+
+.code-input:focused {
+    -fx-border-color: #00ff00;
+    -fx-effect: dropshadow(gaussian, rgba(0, 255, 0, 0.4), 8, 0, 0, 0);
+}
+
+.code-input .content {
+    -fx-background-color: #000000;
+}
+
+.output-area {
+    -fx-control-inner-background: #000000;
+    -fx-text-fill: #00ff00;
+    -fx-border-color: #008800;
+}
+.output-area .content {
+    -fx-background-color: #000000;
+}
+
+.diagram-tabs .tab-header-area .tab-header-background {
+    -fx-background-color: #050505;
+}
+
+.diagram-tabs .tab {
+    -fx-background-color: #020202;
+    -fx-text-base-color: #008800;
+    -fx-border-color: #008800;
+}
+.diagram-tabs .tab:selected {
+    -fx-background-color: #000000;
+    -fx-text-base-color: #00ff00;
+    -fx-border-color: #00ff00;
+}
+
+.generate-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: #00ff00;
+    -fx-text-fill: #00ff00;
+}
+.generate-btn:hover {
+    -fx-background-color: #003300;
+}
+
+.full-diagram-box {
+    -fx-background-color: #000000;
+    -fx-border-color: #00ff00;
+}

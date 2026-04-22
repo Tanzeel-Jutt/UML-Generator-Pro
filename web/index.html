@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UML Generator Pro — Advanced Diagram Generator</title>
+<meta name="description" content="Professional UML, ER, EERD and Relational Mapping generator for Java, Python, C++ and SQL with SOLID analysis.">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6366f1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').then(reg => console.log('SW Registered'));
+    });
+  }
+</script>
+</head>
+<body class="theme-dracula">
+
+<!-- TOP BAR -->
+<header class="top-bar" id="top-bar">
+  <div class="top-bar-left">
+    <span class="logo-hex">⬡</span>
+    <span class="app-title">UML Generator Pro</span>
+    <span class="app-version">v1.0</span>
+  </div>
+  <div class="top-bar-right">
+    <button class="btn btn-green" id="install-pwa-btn" style="display:none; font-weight:bold; margin-right:10px;">📥 Install App</button>
+    <a href="uml-generator-pro.jar" download class="btn btn-outline" style="text-decoration:none; margin-right:20px; font-size:12px; border-color:#475569;">💻 Desktop JAR</a>
+    <label class="bar-label">Theme:</label>
+    <select id="theme-selector" class="bar-select">
+      <option value="dracula">Dracula</option>
+      <option value="hacker">Matrix Hacker</option>
+    </select>
+    <button class="btn btn-purple" id="uml-to-code-btn">✏ UML → Code</button>
+    <button class="btn btn-teal" id="scan-folder-btn" title="Upload multiple source files">📁 Scan Files</button>
+    <input type="file" id="scan-file-input" multiple webkitdirectory directory accept=".java,.py,.cpp,.h,.hpp,.sql" style="display:none">
+    <label class="bar-label">Language:</label>
+    <select id="language-selector" class="bar-select">
+      <option value="Java">Java</option>
+      <option value="Python">Python</option>
+      <option value="C++">C++</option>
+      <option value="SQL">SQL</option>
+    </select>
+    <button class="btn btn-green" id="generate-btn">▶ Generate</button>
+    <div class="dropdown-wrap">
+      <button class="btn btn-export" id="export-btn">📤 Export ▾</button>
+      <div class="dropdown-menu" id="export-menu">
+        <div class="dropdown-item" id="export-png-btn">Export as PNG</div>
+        <div class="dropdown-item" id="export-sql-btn">Export SQL Script</div>
+        <div class="dropdown-item" id="export-mapping-btn">Export Mapping</div>
+      </div>
+    </div>
+    <button class="btn btn-red" id="clear-btn">🗑 Clear</button>
+  </div>
+</header>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout" id="main-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title-row">
+        <span class="sidebar-title">📝 Code Files</span>
+        <button class="mini-btn green" id="add-class-btn" title="Add Class">+ Class</button>
+        <button class="mini-btn red" id="remove-class-btn" title="Remove Class">− Remove</button>
+      </div>
+      <!-- Code Tabs -->
+      <div class="code-tabs-header" id="code-tabs-header"></div>
+      <div class="code-tabs-body" id="code-tabs-body"></div>
+    </div>
+
+    <div class="sidebar-sep"></div>
+
+    <div class="sidebar-section classes-section">
+      <div class="sidebar-title">📦 Classes Found</div>
+      <div class="class-list" id="class-list"></div>
+    </div>
+
+    <div id="show-full-box" style="display:none" class="sidebar-section">
+      <button class="sidebar-full-btn" id="show-full-btn">🔄 Show Full Diagram</button>
+    </div>
+
+    <div class="sidebar-sep"></div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-title" style="color:#94a3b8;font-size:11px;">💡 Tips</div>
+      <div class="tips-box">
+        <div class="tip">• Add multiple class tabs above</div>
+        <div class="tip">• SQL generates ER + EERD + Mapping</div>
+        <div class="tip">• Click class boxes for details</div>
+        <div class="tip">• &gt;20 classes = overview mode</div>
+        <div class="tip">• Scroll/pinch to zoom diagrams</div>
+        <div class="tip">• Legend: Yellow oval = PK, Red oval = FK</div>
+        <div class="tip">• Legend: Blue box = Entity, Orange = Weak</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CENTER: Diagram Tabs -->
+  <main class="center-content" id="center-content">
+    <div class="diagram-tabs-header" id="diagram-tabs-header">
+      <button class="dtab active" data-tab="uml">📊 UML Class Diagram</button>
+      <button class="dtab" data-tab="solid">🛡️ SOLID Report</button>
+      <button class="dtab" data-tab="er" id="er-tab-btn" disabled>🔷 ER Diagram</button>
+      <button class="dtab" data-tab="eerd" id="eerd-tab-btn" disabled>🔶 EERD Diagram</button>
+      <button class="dtab" data-tab="relational" id="rel-tab-btn" disabled>📋 Relational Mapping</button>
+      <button class="dtab" data-tab="sql" id="sql-tab-btn" disabled>📜 Normalized SQL</button>
+    </div>
+    <div class="diagram-tab-content" id="diagram-tab-content">
+      <!-- UML Tab -->
+      <div class="tab-panel active" id="panel-uml">
+        <canvas id="uml-canvas"></canvas>
+        <div class="detail-card" id="detail-card" style="display:none"></div>
+      </div>
+      <!-- SOLID Tab -->
+      <div class="tab-panel" id="panel-solid">
+        <textarea class="output-area" id="solid-output" readonly placeholder="SOLID principle analysis will appear here after generating UML..."></textarea>
+      </div>
+      <!-- ER Tab -->
+      <div class="tab-panel" id="panel-er">
+        <div id="er-canvas" style="width:100%; height:100%;"></div>
+      </div>
+      <!-- EERD Tab -->
+      <div class="tab-panel" id="panel-eerd">
+        <div id="eerd-canvas" style="width:100%; height:100%;"></div>
+      </div>
+      <!-- Relational Mapping Tab -->
+      <div class="tab-panel" id="panel-relational">
+        <div id="rel-canvas" style="width:100%; height:100%;"></div>
+      </div>
+      <!-- SQL Tab -->
+      <div class="tab-panel" id="panel-sql">
+        <textarea class="output-area" id="sql-output" readonly placeholder="Normalized SQL DDL script will appear here..."></textarea>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- STATUS BAR -->
+<footer class="status-bar">
+  <span id="status-label">Ready — Paste your code and click Generate</span>
+  <span class="status-credits">UML Generator Pro © 2026 | Scalable Architecture</span>
+</footer>
+
+<!-- UML → CODE PANEL (hidden overlay) -->
+<div class="uml-code-overlay" id="uml-code-overlay" style="display:none; flex-direction:column; background:var(--bg); position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999;">
+  
+  <!-- Header -->
+  <div class="uml-code-header" style="display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background:var(--surface); border-bottom:1px solid var(--border);">
+    <div style="display:flex; align-items:center; gap:15px;">
+      <button class="btn btn-outline" id="back-btn" style="padding:6px 12px; border-color:#475569; border-radius:4px;">← Back</button>
+      <span style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:18px;">✏</span>
+        <span style="font-size:18px; font-weight:bold; color:var(--text);">UML → Code Generator</span>
+        <span style="color:#64748b; font-size:13px; margin-left:8px;">Write UML notation → Get boilerplate code</span>
+      </span>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <label style="color:#94a3b8; font-size:13px;">Theme:</label>
+        <select id="gen-theme-selector" class="form-select" style="background:var(--surface2); padding:6px 10px; border:1px solid var(--border); border-radius:4px; color:var(--text);">
+          <option value="dracula">Dracula</option>
+          <option value="hacker">Matrix Hacker</option>
+        </select>
+      </div>
+      <button class="btn btn-warning" id="tips-btn" style="background:#d97706; color:white; padding:6px 16px; border-radius:4px; font-weight:500;">💡 Tips</button>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <label style="color:#94a3b8; font-size:13px;">Target Language:</label>
+        <select id="gen-language" class="form-select" style="background:#0f172a; width:100px; padding:6px 10px; border:1px solid #334155; border-radius:4px;">
+          <option value="Java">Java</option>
+          <option value="Python">Python</option>
+          <option value="C++">C++</option>
+        </select>
+      </div>
+      <button class="btn btn-purple" id="generate-code-btn" style="background:#6366f1; padding:6px 20px; border-radius:4px; font-weight:bold;">⚡ Generate Code</button>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="uml-code-body" style="display:flex; flex:1; overflow:hidden;">
+    
+    <!-- Left Column: Inputs -->
+    <div style="width:42%; display:flex; flex-direction:column; background:var(--bg); border-right:4px solid var(--surface2);">
+      
+      <!-- Classes Tabs Header -->
+      <div style="display:flex; align-items:center; padding:10px 15px; background:var(--surface); gap:10px; border-bottom:1px solid var(--border);">
+        <span style="color:var(--text); font-weight:bold; font-size:13px; display:flex; align-items:center; gap:6px;">📦 Classes:</span>
+        <button class="btn btn-green" id="add-uml-class-btn" style="padding:4px 12px; font-size:12px; border-radius:4px; background:#10b981;">+ Add Class</button>
+        <button class="btn btn-red" id="remove-uml-class-btn" style="padding:4px 12px; font-size:12px; border-radius:4px; background:#ef4444;">- Remove</button>
+      </div>
+      
+      <div id="uml-class-tabs" style="display:flex; background:var(--surface2); border-bottom:1px solid var(--border); overflow-x:auto;">
+        <!-- Tabs will be generated here -->
+      </div>
+
+      <!-- Scrollable Input Area -->
+      <div id="uml-class-input-container" style="flex:1; overflow-y:auto; padding:20px;">
+        <!-- Dynamic content goes here based on active tab -->
+      </div>
+
+      <!-- Bottom Tips Expandable -->
+      <div style="background:var(--accent); color:var(--bg); padding:10px 15px; font-weight:bold; font-size:13px; cursor:pointer; display:flex; align-items:center; gap:8px;" id="uml-tips-toggle">
+        <span id="uml-tips-icon">▼</span> 💡 UML Notation Tips & Guide
+      </div>
+      <div id="uml-tips-content" style="background:var(--bg); padding:15px; display:none; border-top:1px solid var(--border); max-height:250px; overflow-y:auto;">
+        <div style="background:var(--surface); padding:12px; border-radius:6px; border:1px solid var(--border); margin-bottom:10px;">
+          <strong style="color:var(--yellow); font-size:13px; display:block; margin-bottom:6px;">🔑 Access Modifiers</strong>
+          <pre style="color:var(--text); font-family:var(--mono); font-size:12px; margin:0; line-height:1.4;">+  → public          -  → private
+#  → protected       ~  → package-private
+None → default access</pre>
+        </div>
+        <div style="background:var(--surface); padding:12px; border-radius:6px; border:1px solid var(--border); margin-bottom:10px;">
+          <strong style="color:var(--yellow); font-size:13px; display:block; margin-bottom:6px;">📝 Attribute Format</strong>
+          <pre style="color:var(--text); font-family:var(--mono); font-size:12px; margin:0; line-height:1.4;">access name: Type
+Example: - name: String
+Example: + age: int</pre>
+        </div>
+        <div style="background:var(--surface); padding:12px; border-radius:6px; border:1px solid var(--border); margin-bottom:10px;">
+          <strong style="color:var(--yellow); font-size:13px; display:block; margin-bottom:6px;">⚙️ Method Format</strong>
+          <pre style="color:var(--text); font-family:var(--mono); font-size:12px; margin:0; line-height:1.4;">access name(params): ReturnType
+Example: + getName(): String
+Example: + setName(name: String): void</pre>
+        </div>
+        <div style="background:var(--surface); padding:12px; border-radius:6px; border:1px solid var(--border); margin-bottom:10px;">
+          <strong style="color:var(--yellow); font-size:13px; display:block; margin-bottom:6px;">🔧 Params with types</strong>
+          <pre style="color:var(--text); font-family:var(--mono); font-size:12px; margin:0; line-height:1.4;">+ setData(name: String, id: int): void</pre>
+        </div>
+        <div style="background:var(--surface); padding:12px; border-radius:6px; border:1px solid var(--border); margin-bottom:10px;">
+          <strong style="color:var(--yellow); font-size:13px; display:block; margin-bottom:6px;">🏗️ Constructor</strong>
+          <pre style="color:var(--text); font-family:var(--mono); font-size:12px; margin:0; line-height:1.4;">Use class name as method name:
+Example: + Student(name: String)
+Note: Default constructor is auto-generated!</pre>
+        </div>
+        <div style="background:var(--surface); padding:12px; border-radius:6px; border:1px solid var(--border); margin-bottom:10px;">
+          <strong style="color:var(--yellow); font-size:13px; display:block; margin-bottom:6px;">📌 Static members</strong>
+          <pre style="color:var(--text); font-family:var(--mono); font-size:12px; margin:0; line-height:1.4;">Use {static} in curly braces
+Example: - count: int {static}
+Example: + getInstance(): MyClass {static}</pre>
+        </div>
+        <div style="background:var(--surface); padding:12px; border-radius:6px; border:1px solid var(--border); margin-bottom:10px;">
+          <strong style="color:var(--yellow); font-size:13px; display:block; margin-bottom:6px;">🔒 Final fields</strong>
+          <pre style="color:var(--text); font-family:var(--mono); font-size:12px; margin:0; line-height:1.4;">Use {final} in curly braces
+Example: - PI: double {final}</pre>
+        </div>
+        <div style="background:var(--surface); padding:12px; border-radius:6px; border:1px solid var(--border); margin-bottom:10px;">
+          <strong style="color:var(--yellow); font-size:13px; display:block; margin-bottom:6px;">🔗 Combined modifiers</strong>
+          <pre style="color:var(--text); font-family:var(--mono); font-size:12px; margin:0; line-height:1.4;">Use {static, final} with comma
+Example: - MAX: int {static, final}</pre>
+        </div>
+        <div style="background:var(--surface); padding:12px; border-radius:6px; border:1px solid var(--border); margin-bottom:10px;">
+          <strong style="color:var(--yellow); font-size:13px; display:block; margin-bottom:6px;">📐 Abstract methods</strong>
+          <pre style="color:var(--text); font-family:var(--mono); font-size:12px; margin:0; line-height:1.4;">Use {abstract} in curly braces
+Example: + draw(): void {abstract}</pre>
+        </div>
+        <div style="background:var(--surface); padding:12px; border-radius:6px; border:1px solid var(--border); margin-bottom:10px;">
+          <strong style="color:var(--yellow); font-size:13px; display:block; margin-bottom:6px;">🔹 Abstract class</strong>
+          <pre style="color:var(--text); font-family:var(--mono); font-size:12px; margin:0; line-height:1.4;">Write in Class Name box:
+  &lt;&lt;abstract&gt;&gt; ClassName</pre>
+        </div>
+        <div style="background:var(--surface); padding:12px; border-radius:6px; border:1px solid var(--border); margin-bottom:10px;">
+          <strong style="color:var(--yellow); font-size:13px; display:block; margin-bottom:6px;">🟡 Interface</strong>
+          <pre style="color:var(--text); font-family:var(--mono); font-size:12px; margin:0; line-height:1.4;">Write in Class Name box:
+  &lt;&lt;interface&gt;&gt; InterfaceName</pre>
+        </div>
+        <div style="background:var(--surface); padding:12px; border-radius:6px; border:1px solid var(--border); margin-bottom:10px;">
+          <strong style="color:var(--yellow); font-size:13px; display:block; margin-bottom:6px;">🟠 Enum</strong>
+          <pre style="color:var(--text); font-family:var(--mono); font-size:12px; margin:0; line-height:1.4;">Write in Class Name box:
+  &lt;&lt;enum&gt;&gt; EnumName</pre>
+        </div>
+        <div style="background:var(--surface); padding:12px; border-radius:6px; border:1px solid var(--border);">
+          <strong style="color:var(--yellow); font-size:13px; display:block; margin-bottom:6px;">🔗 Multiple Classes / Relations</strong>
+          <pre style="color:var(--text); font-family:var(--mono); font-size:12px; margin:0; line-height:1.4;">Write extends or implements in Class Name box:
+Example: class Car extends Vehicle
+Example: class Dog implements Animal</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Output -->
+    <div style="flex:1; display:flex; flex-direction:column; background:var(--bg); padding:20px;">
+      
+      <!-- Output Tabs -->
+      <div style="display:flex; margin-bottom:15px; gap:4px;">
+        <button class="out-tab active" id="tab-boiler" style="padding:8px 20px; background:var(--surface); color:var(--accent); border:1px solid var(--border); border-radius:4px; font-weight:500; font-size:13px; display:flex; align-items:center; gap:6px;">📄 Boilerplate Code</button>
+        <button class="out-tab" id="tab-solid" style="padding:8px 20px; background:transparent; color:#64748b; border:none; font-size:13px; cursor:pointer;">🛡️ SOLID Report</button>
+      </div>
+
+      <!-- Output Textareas -->
+      <textarea id="gen-code-output" readonly style="flex:1; width:100%; background:var(--bg); color:var(--accent); font-family:var(--mono); font-size:13px; padding:15px; border:1px solid var(--border); border-radius:4px; resize:none;" placeholder="Generated code will appear here... Fill in the UML boxes on the left and code will be generated automatically! Use '+ Add Class' to create multiple classes."></textarea>
+      <textarea id="gen-solid-output" readonly style="display:none; flex:1; width:100%; background:#111827; color:#4ade80; font-family:'JetBrains Mono', Consolas, monospace; font-size:13px; padding:15px; border:1px solid #334155; border-radius:4px; resize:none;" placeholder="SOLID Analysis report will appear here..."></textarea>
+      
+      <!-- Copy Button -->
+      <div style="margin-top:15px;">
+        <button class="btn btn-purple" id="copy-code-btn" style="background:#6366f1; padding:8px 20px; border-radius:4px; font-weight:bold; display:flex; align-items:center; gap:6px;">📋 Copy to Clipboard</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="parsers.js"></script>
+<script src="renderers.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

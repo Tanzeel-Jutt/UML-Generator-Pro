@@ -1,0 +1,23 @@
+# Java build output
+target/
+bin/
+*.class
+
+# IDE files
+.settings/
+.classpath
+.project
+.vscode/
+*.iml
+.idea/
+
+# Maven wrapper (optional, can include if needed)
+# .mvn/
+
+# OS files
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Logs
+*.log

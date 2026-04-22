@@ -1,0 +1,73 @@
+/* GitHub Light Theme */
+.root {
+    -fx-font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+    -fx-font-size: 12px;
+    -fx-background-color: #f6f8fa;
+    -fx-text-fill: #24292f;
+}
+
+.root-layout {
+    -fx-background-color: #f6f8fa;
+}
+
+.top-bar {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #d0d7de transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.sidebar {
+    -fx-background-color: #f6f8fa;
+    -fx-border-color: transparent #d0d7de transparent transparent;
+    -fx-border-width: 0 1 0 0;
+}
+
+.code-input {
+    -fx-control-inner-background: #ffffff;
+    -fx-text-fill: #24292f;
+    -fx-border-color: #d0d7de;
+    -fx-prompt-text-fill: #6e7781;
+}
+
+.code-input:focused {
+    -fx-border-color: #0969da;
+}
+
+.code-input .content {
+    -fx-background-color: #ffffff;
+}
+
+.output-area {
+    -fx-control-inner-background: #ffffff;
+    -fx-text-fill: #116329;
+    -fx-border-color: #d0d7de;
+}
+.output-area .content {
+    -fx-background-color: #ffffff;
+}
+
+.diagram-tabs .tab-header-area .tab-header-background {
+    -fx-background-color: #eaeef2;
+}
+
+.diagram-tabs .tab {
+    -fx-background-color: #eaeef2;
+    -fx-text-base-color: #57606a;
+}
+.diagram-tabs .tab:selected {
+    -fx-background-color: #ffffff;
+    -fx-text-base-color: #24292f;
+}
+
+.generate-btn {
+    -fx-background-color: #2da44e;
+    -fx-text-fill: white;
+}
+.generate-btn:hover {
+    -fx-background-color: #2c974b;
+}
+
+.full-diagram-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d0d7de;
+}
